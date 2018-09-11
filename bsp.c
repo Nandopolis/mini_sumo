@@ -8,8 +8,17 @@
 #define F_CPU 16000000UL
 
 #include <avr/io.h>
+#include <util/delay.h>
 #include "bsp.h"
 #include "sumo.h"
+
+void BSP_delay_ms(uint32_t ms) {
+	uint32_t cycles = ms * F_CPU / 1000;
+	while (cycles > 0) {
+		cycles--;
+		__asm__ __volatile__ ("nop");
+	}
+}
 
 void BSP_InitGPIO() {
 	// set I/O pins

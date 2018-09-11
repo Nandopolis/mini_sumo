@@ -24,6 +24,8 @@ enum {
 	LED = 5
 };
 
+void BSP_delay_ms(uint32_t ms);
+
 void BSP_InitGPIO();
 void BSP_InitTimer0();
 void BSP_InitADC();

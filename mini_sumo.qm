@@ -109,7 +109,7 @@ if (BSP_ReadOpSensors(me)) {
         <action>BSP_TurnSpeed(Q_PAR(me), RIGHT);</action>
         <choice target="../../../2/2">
          <guard brief="too_close">Q_PAR(me) &gt; 51</guard>
-         <choice_glyph conn="54,52,5,3,12,0,4">
+         <choice_glyph conn="54,52,5,3,16">
           <action box="1,-2,10,2"/>
          </choice_glyph>
         </choice>
@@ -229,22 +229,58 @@ if (BSP_ReadOpSensors(me)) {
        </state_glyph>
       </state>
       <state name="is_back">
-       <entry>BSP_TurnLeft();
+       <entry>/*switch (me-&gt;combat_mode) {
+    case 0x00:
+        break;
+    case 0x03:
+        break;
+    default:
+        break;
+}*/
+BSP_TurnLeft();
 BSP_SetTimer1(1000);</entry>
        <state_glyph node="8,60,12,18">
         <entry box="1,2,6,2"/>
        </state_glyph>
       </state>
       <state name="is_left">
-       <entry>BSP_TurnLeft();
-BSP_SetTimer1(660);</entry>
+       <entry>switch (me-&gt;combat_mode) {
+    case 0x00:
+        BSP_TurnLeft();
+        BSP_SetTimer1(660);
+        break;
+    case 0x03:
+        BSP_TurnSpeed(40, LEFT);
+        //BSP_SetTimer1(660);
+        break;
+    default:
+        BSP_TurnLeft();
+        BSP_SetTimer1(660);
+        break;
+}
+//BSP_TurnLeft();
+//BSP_SetTimer1(660);</entry>
        <state_glyph node="26,60,12,18">
         <entry box="1,2,6,2"/>
        </state_glyph>
       </state>
       <state name="is_right">
-       <entry>BSP_TurnRight();
-BSP_SetTimer1(660);</entry>
+       <entry>switch (me-&gt;combat_mode) {
+    case 0x00:
+        BSP_TurnRight();
+        BSP_SetTimer1(660);
+        break;
+    case 0x03:
+        BSP_TurnSpeed(40, RIGHT);
+        //BSP_SetTimer1(660);
+        break;
+    default:
+        BSP_TurnRight();
+        BSP_SetTimer1(660);
+        break;
+}
+//BSP_TurnRight();
+//BSP_SetTimer1(660);</entry>
        <state_glyph node="26,38,12,18">
         <entry box="1,2,6,2"/>
        </state_glyph>
@@ -289,6 +325,7 @@ BSP_SetTimer1(500);</entry>
      </tran>
      <state name="back">
       <entry>BSP_GoBack();
+BSP_delay_ms(250);
 QActive_armX((QActive *)me, 0U, BSP_TICKS_PER_SEC/2, BSP_TICKS_PER_SEC/2);</entry>
       <tran trig="Q_TIMEOUT" target="../../3">
        <tran_glyph conn="102,82,3,1,14,8,-2">

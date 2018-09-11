@@ -393,6 +393,14 @@ QState Sumo_is_back(Sumo * const me) {
     switch (Q_SIG(me)) {
         /* ${AOs::Sumo::SM::combat::start::is_back} */
         case Q_ENTRY_SIG: {
+            /*switch (me->combat_mode) {
+                case 0x00:
+                    break;
+                case 0x03:
+                    break;
+                default:
+                    break;
+            }*/
             BSP_TurnLeft();
             BSP_SetTimer1(1000);
             status_ = Q_HANDLED();
@@ -411,8 +419,22 @@ QState Sumo_is_left(Sumo * const me) {
     switch (Q_SIG(me)) {
         /* ${AOs::Sumo::SM::combat::start::is_left} */
         case Q_ENTRY_SIG: {
-            BSP_TurnLeft();
-            BSP_SetTimer1(660);
+            switch (me->combat_mode) {
+                case 0x00:
+                    BSP_TurnLeft();
+                    BSP_SetTimer1(660);
+                    break;
+                case 0x03:
+                    BSP_TurnSpeed(40, LEFT);
+                    //BSP_SetTimer1(660);
+                    break;
+                default:
+                    BSP_TurnLeft();
+                    BSP_SetTimer1(660);
+                    break;
+            }
+            //BSP_TurnLeft();
+            //BSP_SetTimer1(660);
             status_ = Q_HANDLED();
             break;
         }
@@ -429,8 +451,22 @@ QState Sumo_is_right(Sumo * const me) {
     switch (Q_SIG(me)) {
         /* ${AOs::Sumo::SM::combat::start::is_right} */
         case Q_ENTRY_SIG: {
-            BSP_TurnRight();
-            BSP_SetTimer1(660);
+            switch (me->combat_mode) {
+                case 0x00:
+                    BSP_TurnRight();
+                    BSP_SetTimer1(660);
+                    break;
+                case 0x03:
+                    BSP_TurnSpeed(40, RIGHT);
+                    //BSP_SetTimer1(660);
+                    break;
+                default:
+                    BSP_TurnRight();
+                    BSP_SetTimer1(660);
+                    break;
+            }
+            //BSP_TurnRight();
+            //BSP_SetTimer1(660);
             status_ = Q_HANDLED();
             break;
         }
@@ -506,6 +542,7 @@ QState Sumo_back(Sumo * const me) {
         /* ${AOs::Sumo::SM::edge::back} */
         case Q_ENTRY_SIG: {
             BSP_GoBack();
+            BSP_delay_ms(250);
             QActive_armX((QActive *)me, 0U, BSP_TICKS_PER_SEC/2, BSP_TICKS_PER_SEC/2);
             status_ = Q_HANDLED();
             break;
